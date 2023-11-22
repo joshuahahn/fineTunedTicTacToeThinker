@@ -5,7 +5,7 @@ November 22, 2023
 Joshua Hahn jyh2134
 Jimmy Zhang jz3443
 
-Generates an annotated dataset of tic-tac-toe boards.
+Scores tic tac toe board states.
 
 Intermediate board states are represented by a 3x3 array of numbers.
 ex: [[001], [010], [220]]
@@ -17,7 +17,7 @@ state for X, and 0 to denote a (roughly) tied state.
 """
 
 def win(state):
-    """Determines if the game is won, and if so, by who."""
+    """ Determines if the game is won, and if so, by who. """
 
     # Check horizontal & vertical wins
     for i in range(3):
@@ -37,7 +37,7 @@ def win(state):
     return 0
 
 def score(state):
-    """Returns who is winning"""
+    """ Returns who is winning """
 
     # First check if the game is already over
     res = win(state)
