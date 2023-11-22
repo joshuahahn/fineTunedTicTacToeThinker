@@ -12,9 +12,8 @@ ex: [[001], [010], [220]]
 Where 0 represents an empty tile, 1 represents an O tile, and 2
 represents an X tile.
 
-WLOG, we denote + scores as an edge in favor of O, and - scores as an
-edge in favor of X. Scores are in [-1, 1] where a score of -1 or 1
-represents a finished game (one person has won)
+WLOG, we use +1 to denote a winning state for O, -1 to denote a winning
+state for X, and 0 to denote a (roughly) tied state.
 """
 
 def win(state):
