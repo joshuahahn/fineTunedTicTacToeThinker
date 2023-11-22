@@ -36,6 +36,21 @@ def win(state):
     # No winner yet
     return 0
 
+def draw(state):
+    """ Determines if a game is drawn """
+    
+    # check if game is already won
+    if win(state):
+        return False
+    
+    for row in range(len(state)):
+        for col in range(len(state)[0]):
+            # try to find empty square; if there exists one, there is still a playable move
+            if not state[row][col]:
+                return False
+    
+    return True
+
 def score(state):
     """ Returns who is winning """
 
@@ -58,7 +73,7 @@ def score(state):
         lines.append(set([state[i][0], state[i][1], state[i][2]]))
 
     lines.append(set([state[0][0], state[1][1], state[2][2]]))
-    lines.append(set([state[0][2], staet[1][1], state[2][0]]))
+    lines.append(set([state[0][2], state[1][1], state[2][0]]))
 
     for line in lines:
         if 0 in line:
