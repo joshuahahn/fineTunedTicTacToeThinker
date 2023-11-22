@@ -1,4 +1,3 @@
-import scorer
 """
 Deep Learning for Computer Vision Final Project
 November 22, 2023
@@ -8,6 +7,8 @@ Jimmy Zhang jz3443
 
 Generates an annotated dataset of tic tac toe boards.
 """
+
+import scorer
 
 def generateIntermediate(n=3):
     """ Generates valid intermediate board representations.  """
@@ -48,5 +49,3 @@ def generateIntermediate(n=3):
 def generateDataset():
     """ Generates an annotated dataset of tic tac toe boards.  """
     pass
-
-print(generateIntermediate())
