@@ -47,7 +47,45 @@ def score(state):
     # We'll be using a few heuristics to meausre the state of the game,
     # with weight assigned in the following order:
     # 1. Number of rows / diagonals / columns with 2 claimed cells and
-    #    an empty slot in the remaining cell
+    #    an empty slot in the remaining cell (+/- 10)
     # 2. Number of rows / diagonals / colums with 1 claimed cell and
-    #    two empty slots in the remaining cells
-    # 3. Who's turn it is
+    #    two empty slots in the remaining cells (+/- 5)
+    # 3. Who's turn it is (+/- 5)
+
+    lines = []
+    for i in range(3):
+        lines.append(set([state[0][i], state[1][i], state[2][i]]))
+        lines.append(set([state[i][0], state[i][1], state[i][2]]))
+
+    lines.append(set([state[0][0], state[1][1], state[2][2]]))
+    lines.append(set([state[0][2], staet[1][1], state[2][0]]))
+
+    for line in lines:
+        if 0 in line:
+            lineSum = sum(line)
+            if 1 in line:
+                if lineSum == 2: res += 10  # 2 in a line, O
+                elif lineSum == 1: res += 5 # 1 in a line, O
+            if 2 in line:
+                if lineSum == 4: res -= 10  # 2 in a line, X
+                elif lineSum == 2: res -= 5 # 1 in a line, X
+
+    tileCount = 0
+    for row in state:
+        for cell in row:
+            if cell == 1:
+                tileCount += 1
+            elif cell == 2:
+                tileCOunt -= 1
+
+    if tileCount == 0:
+        res -= 5 # X's turn
+    else:
+        res += 5 # O's turn
+
+    if abs(res) <= 5:
+        return 0
+    elif res > 5:
+        return 1
+    else:
+        return -1
