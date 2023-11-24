@@ -21,20 +21,35 @@ def win(state):
 
     # Check horizontal & vertical wins
     for i in range(3):
-        if state[i][0] == state[i][1] == state[i][2]:
+        if state[i][0] != 0 and state[i][0] == state[i][1] == state[i][2]:
             return 3 - (2 * state[i][0])
-        if state[0][i] == state[1][i] == state[2][i]:
+        if state[0][i] != 0 and state[0][i] == state[1][i] == state[2][i]:
             return 3 - (2 * state[i][0])
 
     # Check diagonal wins
-    if state[0][0] == state[1][1] == state[2][2]:
+    if state[0][0] != 0 and state[0][0] == state[1][1] == state[2][2]:
         return 3 - (2 * state[0][0])
 
-    if state[0][2] == state[1][1] == state[2][0]:
+    if state[0][2] != 0 and state[0][2] == state[1][1] == state[2][0]:
         return 3 - (2 * state[0][2])
 
     # No winner yet
     return 0
+
+def draw(state):
+    """ Determines if a game is drawn """
+    
+    # check if game is already won
+    if win(state):
+        return False
+    
+    for row in range(len(state)):
+        for col in range(len(state[0])):
+            # try to find empty square; if there exists one, there is still a playable move
+            if not state[row][col]:
+                return False
+    
+    return True
 
 def score(state):
     """ Returns who is winning """
@@ -58,7 +73,7 @@ def score(state):
         lines.append(set([state[i][0], state[i][1], state[i][2]]))
 
     lines.append(set([state[0][0], state[1][1], state[2][2]]))
-    lines.append(set([state[0][2], staet[1][1], state[2][0]]))
+    lines.append(set([state[0][2], state[1][1], state[2][0]]))
 
     for line in lines:
         if 0 in line:
