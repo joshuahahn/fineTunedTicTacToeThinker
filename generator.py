@@ -15,3 +15,5 @@ def generateIntermediate():
 
 def generateDataset():
     """ Generates an annotated dataset of tic tac toe boards.  """
+
+generateDataset(generateIntermediate())
