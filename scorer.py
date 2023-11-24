@@ -38,17 +38,17 @@ def win(state):
 
 def draw(state):
     """ Determines if a game is drawn """
-    
-    # check if game is already won
+
+    # Check if game is already won
     if win(state):
         return False
-    
+
     for row in range(len(state)):
         for col in range(len(state[0])):
-            # try to find empty square; if there exists one, there is still a playable move
-            if not state[row][col]:
+            # If there is an empty square, there is a playable move.
+            if state[row][col] == 0:
                 return False
-    
+
     return True
 
 def score(state):
