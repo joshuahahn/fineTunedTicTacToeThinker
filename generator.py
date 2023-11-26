@@ -12,6 +12,9 @@ import scorer
 import numpy as np
 import numpy.random as rand
 
+from PIL import Image
+import os
+
 # Global variables for generating images.
 lineDistribution = [0,1,1,2,2,3]
 tileDistribution = [0,1,1,1,2,2,2,2,3,3,3,3,4,4,4,5]
@@ -139,4 +142,24 @@ def generateImage(state):
 
     return board
 
+def importImages():
+    Xdir = '/images/X/'
+    Odir = '/images/O/'
+    horizontal_dir = '/images/horizontal/'
+    vertical_dir = '/images/vertical/'
+
+    directories = [Xdir, Odir, horizontal_dir, vertical_dir]
+    image_arrays = [Xs, Os, horizontalLines, verticalLines]
+
+    for i in range(4):
+        for filename in os.listdir(directories[i]):
+            f = os.path.join(directories[i], filename)
+
+            if os.path.isfile(f):
+                image = Image.open(f).convert('L')
+                image_array = np.asarray(image)
+                image_arrays[i].append(image_array)
+
+
+importImages()
 generateDataset(generateIntermediate())
