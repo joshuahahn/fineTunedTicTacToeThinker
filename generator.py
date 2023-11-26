@@ -14,13 +14,14 @@ import numpy.random as rand
 
 from PIL import Image
 import os
+from matplotlib import pyplot as plt
 
 # Global variables for generating images.
 lineDistribution = [0,1,1,2,2,3]
-tileDistribution = [0,1,1,1,2,2,2,2,3,3,3,3,4,4,4,5]
+tileDistribution = [0,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,5]
 tilePositions = [[(1,1),  (1,12),  (1,21) ], \
                  [(12,1), (12,12), (12,21)], \
-                 [(21,1), (21,12), (21,21)]
+                 [(21,1), (21,12), (21,21)]]
 horizontalLines = []
 verticalLines = []
 Xs= []
@@ -90,34 +91,35 @@ def generateImage(state):
 
     # First add the horizontal lines. Refer to the tile heatmap for
     # distributions of the lines and tiles.
-    line = rand.choice(horizontalLines)
+
+    line = horizontalLines[rand.choice(len(horizontalLines))]
     startRow = 8 + rand.choice(lineDistribution)
 
     for i in range(2):
-        for j in range(9):
+        for j in range(28):
             board[i+startRow][j] += line[i][j]
 
-    line = rand.choice(horizontalLines)
+    line = horizontalLines[rand.choice(len(horizontalLines))]
     startRow = 18 + rand.choice(lineDistribution)
 
     for i in range(2):
-        for j in range(9):
+        for j in range(28):
             board[i+startRow][j] += line[i][j]
 
     # Now add the vertical lines.
-    line = rand.choice(verticalLines)
+    line = verticalLines[rand.choice(len(verticalLines))]
     startCol = 8 + rand.choice(lineDistribution)
 
-    for i in range(9):
+    for i in range(28):
         for j in range(2):
-            board[i][j+startCol] += line[i][j]
+            board[i][j+startCol] = max(board[i][j+startCol], line[i][j])
 
-    line = rand.choice(verticalLines)
-    startCol = 18 + rand.choice(lineDistriution)
+    line = verticalLines[rand.choice(len(verticalLines))]
+    startCol = 18 + rand.choice(lineDistribution)
 
-    for i in range(9):
+    for i in range(28):
         for j in range(2):
-            board[i][j+startCol] += line[i][j]
+            board[i][j+startCol] = max(board[i][j+startCol], line[i][j])
 
     # Now add the tiles one by one.
     for i in range(3):
@@ -125,9 +127,9 @@ def generateImage(state):
             if state[i][j] == 0:
                 continue
             elif state[i][j] == 1:
-                tile = rand.choice(Os)
+                tile = Os[rand.choice(len(Os))]
             elif state[i][j] == 2:
-                tile = rand.choice(Xs)
+                tile = Xs[rand.choice(len(Xs))]
 
             startRow, startCol = tilePositions[i][j]
             startRow += rand.choice(tileDistribution)
@@ -138,21 +140,28 @@ def generateImage(state):
                     if startRow + y >= 28 or startCol + x >= 28:
                         break
 
-                    board[startRow+y][startCol+x] += tile[y][x]
+                    board[startRow+y][startCol+x] = max(board[startRow+y][startCol+x], tile[y][x])
+
+    # Make sure all values are in [0, 1]
+    for i in range(28):
+        for j in range(28):
+            board[i][j] = 1 - min(board[i][j], 255) / 255
 
     return board
 
 def importImages():
-    Xdir = '/images/X/'
-    Odir = '/images/O/'
-    horizontal_dir = '/images/horizontal/'
-    vertical_dir = '/images/vertical/'
+    Xdir = 'images/Xs/'
+    Odir = 'images/Os/'
+    horizontal_dir = 'images/horizontal/'
+    vertical_dir = 'images/vertical/'
 
     directories = [Xdir, Odir, horizontal_dir, vertical_dir]
     image_arrays = [Xs, Os, horizontalLines, verticalLines]
 
     for i in range(4):
         for filename in os.listdir(directories[i]):
+            if not filename[0].isnumeric():
+                continue
             f = os.path.join(directories[i], filename)
 
             if os.path.isfile(f):
@@ -162,4 +171,10 @@ def importImages():
 
 
 importImages()
-generateDataset(generateIntermediate())
+#generateDataset(generateIntermediate())
+
+res = generateDataset(generateIntermediate()[:10])
+
+for img, label in res:
+    plt.imshow(img, cmap='gray')
+    plt.show()

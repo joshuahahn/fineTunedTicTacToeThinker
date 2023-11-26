@@ -91,7 +91,7 @@ def score(state):
             if cell == 1:
                 tileCount += 1
             elif cell == 2:
-                tileCOunt -= 1
+                tileCount -= 1
 
     if tileCount == 0:
         res -= 5 # X's turn
