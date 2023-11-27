@@ -16,9 +16,14 @@ from PIL import Image
 import os
 from matplotlib import pyplot as plt
 
+import torch
+from torch.utils.data import TensorDataset
+from torch.utils.data import DataLoader
+from torchvision.transforms import ToTensor
+
 # Global variables for generating images.
-lineDistribution = [0,1,1,2,2,3]
-tileDistribution = [0,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,5]
+lineDistribution = [0.10, 0.40, 0.40, 0.10]
+tileDistribution = [0.01, 0.14, 0.35, 0.35, 0.14, 0.01]
 tilePositions = [[(1,1),  (1,12),  (1,21) ], \
                  [(12,1), (12,12), (12,21)], \
                  [(21,1), (21,12), (21,21)]]
@@ -80,10 +85,21 @@ def generateDataset(states):
     # 5478 * 2 = 16434 images to train over.
 
     images = []
-    for state in states:
-        images.append((generateImage(state), scorer.score(state)))
+    labels = []
+    for i, state in enumerate(states):
+        if i % 1000 == 0:
+            print("State {}".format(i))
 
-    return images
+        score = scorer.score(state)
+
+        # Add 3 versions of the same board
+        for _ in range(3):
+            images.append(torch.from_numpy(generateImage(state)));
+            labels.append(score);
+
+    data = TensorDataset(torch.stack(images), torch.Tensor(labels))
+    print("Finished, dataset length: " + str(len(data)))
+    torch.save(data, './data.pt')
 
 def generateImage(state):
     """ Generates an image based on an intermediate step.  """
@@ -93,14 +109,14 @@ def generateImage(state):
     # distributions of the lines and tiles.
 
     line = horizontalLines[rand.choice(len(horizontalLines))]
-    startRow = 8 + rand.choice(lineDistribution)
+    startRow = 8 + rand.choice(a=4, p=lineDistribution)
 
     for i in range(2):
         for j in range(28):
             board[i+startRow][j] += line[i][j]
 
     line = horizontalLines[rand.choice(len(horizontalLines))]
-    startRow = 18 + rand.choice(lineDistribution)
+    startRow = 18 + rand.choice(a=4, p=lineDistribution)
 
     for i in range(2):
         for j in range(28):
@@ -108,14 +124,14 @@ def generateImage(state):
 
     # Now add the vertical lines.
     line = verticalLines[rand.choice(len(verticalLines))]
-    startCol = 8 + rand.choice(lineDistribution)
+    startCol = 8 + rand.choice(a=4, p=lineDistribution)
 
     for i in range(28):
         for j in range(2):
             board[i][j+startCol] = max(board[i][j+startCol], line[i][j])
 
     line = verticalLines[rand.choice(len(verticalLines))]
-    startCol = 18 + rand.choice(lineDistribution)
+    startCol = 18 + rand.choice(a=4, p=lineDistribution)
 
     for i in range(28):
         for j in range(2):
@@ -132,8 +148,8 @@ def generateImage(state):
                 tile = Xs[rand.choice(len(Xs))]
 
             startRow, startCol = tilePositions[i][j]
-            startRow += rand.choice(tileDistribution)
-            startCol += rand.choice(tileDistribution)
+            startRow += rand.choice(a=6, p=tileDistribution)
+            startCol += rand.choice(a=6, p=tileDistribution)
 
             for y in range(5):
                 for x in range(5):
@@ -171,10 +187,4 @@ def importImages():
 
 
 importImages()
-#generateDataset(generateIntermediate())
-
-res = generateDataset(generateIntermediate()[:10])
-
-for img, label in res:
-    plt.imshow(img, cmap='gray')
-    plt.show()
+generateDataset(generateIntermediate())
