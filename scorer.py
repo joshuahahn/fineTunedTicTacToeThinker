@@ -69,12 +69,12 @@ def score(state):
 
     lines = []
     for i in range(3):
-        lines.append(set([state[0][i], state[1][i], state[2][i]]))
-        lines.append(set([state[i][0], state[i][1], state[i][2]]))
+        lines.append(([state[0][i], state[1][i], state[2][i]]))
+        lines.append(([state[i][0], state[i][1], state[i][2]]))
 
-    lines.append(set([state[0][0], state[1][1], state[2][2]]))
-    lines.append(set([state[0][2], state[1][1], state[2][0]]))
-
+    lines.append(([state[0][0], state[1][1], state[2][2]]))
+    lines.append(([state[0][2], state[1][1], state[2][0]]))
+    
     for line in lines:
         if 0 in line:
             lineSum = sum(line)
