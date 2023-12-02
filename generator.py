@@ -94,8 +94,8 @@ def generateDataset(states):
 
         # Add 3 versions of the same board
         for _ in range(3):
-            images.append(torch.from_numpy(generateImage(state)));
-            labels.append(score);
+            images.append(torch.from_numpy(generateImage(state)))
+            labels.append(score)
 
     data = TensorDataset(torch.stack(images), torch.Tensor(labels))
     print("Finished, dataset length: " + str(len(data)))
@@ -162,6 +162,8 @@ def generateImage(state):
     for i in range(28):
         for j in range(28):
             board[i][j] = 1 - min(board[i][j], 255) / 255
+
+    #board = np.asarray([board[:], board[:], board[:]])
 
     return board
 

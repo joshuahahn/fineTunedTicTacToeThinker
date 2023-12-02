@@ -24,14 +24,14 @@ def win(state):
         if state[i][0] != 0 and state[i][0] == state[i][1] == state[i][2]:
             return state[i][0]
         if state[0][i] != 0 and state[0][i] == state[1][i] == state[2][i]:
-            return state[i][0]
+            return state[0][i]
 
     # Check diagonal wins
     if state[0][0] != 0 and state[0][0] == state[1][1] == state[2][2]:
         return state[0][0]
 
     if state[0][2] != 0 and state[0][2] == state[1][1] == state[2][0]:
-        return state[0][0]
+        return state[0][2]
 
     # No winner yet
     return 0
@@ -95,13 +95,13 @@ def score(state):
             if 1 in line:
                 if lineSum == 2: 
                     if turn == 'O':
-                        return 2
+                        return 1
                     res += 10  # 2 in a line, O
                 elif lineSum == 1: res += 5 # 1 in a line, O
             if 2 in line:
                 if lineSum == 4:
                     if turn == 'X':
-                        return 1
+                        return 2
                     
                     res -= 10  # 2 in a line, X
                 elif lineSum == 2: res -= 5 # 1 in a line, X
@@ -109,6 +109,6 @@ def score(state):
     if abs(res) <= 5:
         return 0
     elif res > 5:
-        return 2
-    else:
         return 1
+    else:
+        return 2
