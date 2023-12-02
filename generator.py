@@ -46,7 +46,7 @@ def generateIntermediate(n=3):
         # Terminate after finding a board in a won or drawn state
         if scorer.win(curr_board) or scorer.draw(curr_board):
             if str(curr_board) not in seenFinished:
-                finishedBoards.append(curr_board)
+                finishedBoards.append([[curr_board[row][col] for col in range(n)] for row in range(n)])
                 seenFinished.add(str(curr_board))
             return
 
@@ -214,6 +214,6 @@ def importImages():
 
 importImages()
 all_boards, finished_boards = generateIntermediate()
-generateDataset(all_boards)
+#generateDataset(all_boards)
 generateFinishedDataset(finished_boards)
 
