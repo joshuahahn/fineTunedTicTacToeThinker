@@ -37,12 +37,17 @@ def generateIntermediate(n=3):
 
     # Keep track of duplicate boards by storing each state as a string
     boards = []
+    finishedBoards = []
     seen = set()
+    seenFinished = set()
 
     # 0: empty tile, 1: O tile, 2: X tile
     def dfs(curr_board, x_turn):
         # Terminate after finding a board in a won or drawn state
         if scorer.win(curr_board) or scorer.draw(curr_board):
+            if str(curr_board) not in seenFinished:
+                finishedBoards.append(curr_board)
+                seenFinished.add(str(curr_board))
             return
 
         for row in range(n):
@@ -67,7 +72,7 @@ def generateIntermediate(n=3):
     seen.add(str(starting_board))
     dfs(starting_board, True) # Assume X plays first
 
-    return boards
+    return boards, finishedBoards
 
 def generateDataset(states):
     """ Generates an annotated dataset of tic tac toe boards.  """
@@ -100,6 +105,24 @@ def generateDataset(states):
     data = TensorDataset(torch.stack(images), torch.Tensor(labels))
     print("Finished, dataset length: " + str(len(data)))
     torch.save(data, './data.pt')
+
+def generateFinishedDataset(states):
+    images = []
+    labels = []
+    for i, state in enumerate(states):
+        if i % 1000 == 0:
+            print("State {}".format(i))
+
+        score = scorer.score(state)
+
+        # Add 3 versions of the same board
+        for _ in range(3):
+            images.append(torch.from_numpy(generateImage(state)))
+            labels.append(score)
+
+    data = TensorDataset(torch.stack(images), torch.Tensor(labels))
+    print("Finished, dataset length: " + str(len(data)))
+    torch.save(data, './finishedData.pt')
 
 def generateImage(state):
     """ Generates an image based on an intermediate step.  """
@@ -190,4 +213,7 @@ def importImages():
 
 
 importImages()
-generateDataset(generateIntermediate())
+all_boards, finished_boards = generateIntermediate()
+generateDataset(all_boards)
+generateFinishedDataset(finished_boards)
+
