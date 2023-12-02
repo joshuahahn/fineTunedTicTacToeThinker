@@ -164,6 +164,7 @@ def generateImage(state):
             board[i][j] = 1 - min(board[i][j], 255) / 255
 
     #board = np.asarray([board[:], board[:], board[:]])
+    board  = np.asarray([board[:]])
 
     return board
 

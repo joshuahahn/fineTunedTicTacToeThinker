@@ -52,7 +52,7 @@ def draw(state):
     return True
 
 def score(state):
-    """ Returns who is winning. 0: tied, 1: X is winning, 2: O is winning """
+    """ Returns who is winning. 0: tied, 1: O is winning, 2: X is winning """
 
     # First check if the game is already over
     res = win(state)
