@@ -214,6 +214,6 @@ def importImages():
 
 importImages()
 all_boards, finished_boards = generateIntermediate()
-#generateDataset(all_boards)
+generateDataset(all_boards)
 generateFinishedDataset(finished_boards)
 
