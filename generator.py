@@ -22,8 +22,8 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
 
 # Global variables for generating images.
-lineDistribution = [0.05, 0.45, 0.45, 0.05]
-tileDistribution = [0.01, 0.04, 0.45, 0.45, 0.04, 0.01]
+lineDistribution = [0.05, 0.90, 0.05, 0]
+tileDistribution = [0.01, 0.04, 0.90, 0.04, 0.01, 0]
 tilePositions = [[(1,1),  (1,12),  (1,21) ], \
                  [(12,1), (12,12), (12,21)], \
                  [(21,1), (21,12), (21,21)]]
